@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Codificator extends PairityBits {
 
-    private OutputStream fileWriter;
+    private OutputStream writer;
 
     public Codificator(String fileName) throws FileNotFoundException{
         super(fileName);
@@ -30,7 +30,7 @@ public class Codificator extends PairityBits {
     public void makeCodification() throws IOException {
         List<Byte> listOfBytes = makeArrayBytes();
         System.out.println("Quantidade de bytes: " + (listOfBytes.size()));
-        fileWriter = new FileOutputStream("pacote.pck");
+        writer = new FileOutputStream("pacote.pck");
         byte[] bytes;
         System.out.println("");
         Byte row;
@@ -61,11 +61,11 @@ public class Codificator extends PairityBits {
             finalBytes[0] = col;
             finalBytes[1] = row;
             System.arraycopy(bytes, 0, finalBytes, 2, 8);
-            fileWriter.write(finalBytes);
-            fileWriter.flush();
+            writer.write(finalBytes);
+            writer.flush();
         }
         
-        fileWriter.close();
+        writer.close();
     }
 
     
