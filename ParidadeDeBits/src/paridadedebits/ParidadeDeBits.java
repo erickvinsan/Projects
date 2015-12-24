@@ -16,21 +16,40 @@ public class ParidadeDeBits {
         System.out.println("Lendo Arquivo...");
         try (FileOutputStream f = new FileOutputStream("pacote.pck")) {
             for (int i = 1; i <= 16; i++) {
-                f.write((byte) (i * Math.random()));
+                f.write((byte) (i));
             }
             f.flush();
         }
 
         Codificator c = new Codificator("pacote.pck");
         c.makeCodification();
-        //List<Byte> list = c.makeArrayBytes();
-        try (FileInputStream fin = new FileInputStream("pacote.pck")) {
+        
+        try (FileInputStream fin = new FileInputStream("pacote.pck")) {//Mostrar Arquivo codificado com os bits de Paridade.
             //List<Byte> list = c.makeArrayBytes();
             byte aux = 0;
-            System.out.println("\n" + "Arquivo completo: ");
+            System.out.println("\n" + "Quadro Codificado: ");
             do {
                 aux = (byte) fin.read();
-                System.out.print(" " + aux);
+                for (int i = 7; i >= 0; i--) {
+                    System.out.print((int)((aux >>> i) & 1));                    
+                }
+                System.out.print(" ");
+            } while (aux != -1);
+        }
+        
+        Decodificator d = new Decodificator("pacote.pck");
+        d.makeDecodification();
+        
+        try (FileInputStream fin = new FileInputStream("pacote.pck")) {//Mostra o Pacote decodificado.
+            //List<Byte> list = c.makeArrayBytes();
+            byte aux = 0;
+            System.out.println("\n" + "Quadro Decodificado: ");
+            do {
+                aux = (byte) fin.read();
+                for (int i = 7; i >= 0; i--) {
+                    System.out.print((int)((aux >>> i) & 1));                    
+                }
+                System.out.print(" ");
             } while (aux != -1);
         }
 //

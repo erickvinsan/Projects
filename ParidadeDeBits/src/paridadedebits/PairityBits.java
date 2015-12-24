@@ -58,7 +58,8 @@ public abstract class PairityBits {
             }
             rowCount = 0;
         }
-        byte b = (byte) (Integer.parseInt(rowByte) & 0xFF);//Converte a String final da paridade das linhas para Byte
+        //System.out.println(rowByte);
+        byte b = (byte) (Integer.parseInt(rowByte, 2));//Converte a String final da paridade das linhas para Byte
         return b;
     }
 
@@ -66,8 +67,8 @@ public abstract class PairityBits {
         String colByte = "";
         int colCount = 0;
         byte aByte;
-        for (int i = 0; i < bytes.length; i++) {//Percorre Cada bit coluna de cada byte do bloco            
-            for (int j = 0; j < 8; j++) {
+        for (int i = 7; i  >= 0; i--) {//Percorre Cada bit coluna de cada byte do bloco            
+            for (int j = 7; j >= 0; j--) {
                 aByte = bytes[j];
                 if (((int) (((byte) (aByte >>> i)) & 1)) == 1) {
                     colCount++;
@@ -80,7 +81,8 @@ public abstract class PairityBits {
             }
             colCount = 0;
         }
-        byte b = (byte) (Integer.parseInt(colByte) & 0xFF);//Converte a String final da paridade das colunas para Byte
+        //System.out.println(colByte);
+        byte b = (byte) (Integer.parseInt(colByte, 2));//Converte a String final da paridade das colunas para Byte
         return b;
     }
 }
