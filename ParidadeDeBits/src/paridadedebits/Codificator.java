@@ -14,19 +14,34 @@ public class Codificator extends PairityBits {
 
     private OutputStream writer;
 
-    public Codificator(String fileName) throws FileNotFoundException{
+    public Codificator(String fileName) throws FileNotFoundException {
         super(fileName);
     }
 
+    /**
+     * Pega blocos de 8 bytes de uma lista.
+     *
+     * @param bytes Lista de bytes a ser filtrada.
+     * @param i
+     * @return Bloco de 8 bytes.
+     */
     private byte[] getBlockOfBytes(List<Byte> bytes, int i) {//Pega blocos de 8 bytes.
         byte[] bytesArray = new byte[8];
         int blockId = i * 8;
-        for (int k = 0; k <  8; k++) {
+        for (int k = 0; k < 8; k++) {
             bytesArray[k] = bytes.get(k + blockId);
         }
         return bytesArray;
     }
 
+    private byte[] fillWithZero() {
+        return null;
+    }
+
+    /**
+     *
+     * @throws IOException
+     */
     public void makeCodification() throws IOException {
         List<Byte> listOfBytes = makeArrayBytes();
         System.out.println("Quantidade de bytes: " + (listOfBytes.size()));
@@ -39,7 +54,7 @@ public class Codificator extends PairityBits {
         System.out.println("Grupos de 8 bytes: " + mult + "\n");
         byte[] finalBytes = new byte[10];
         byte auxConst = 0;
-        
+
         if ((listOfBytes.size() % 8) != 0) {//Número de bytes != múltiplo de 8. Preenche com 0's.
             int rest = listOfBytes.size() - (mult * 8);
             System.out.println("Resto = " + rest + "\n");
@@ -48,7 +63,7 @@ public class Codificator extends PairityBits {
             }
             mult++;
         }
-        
+
         for (int i = 0; i < mult; i++) {// Codifica a Parte inteira da quantidade de bytes
             bytes = getBlockOfBytes(listOfBytes, i);
             System.out.println("Bloco = " + i);
@@ -64,9 +79,8 @@ public class Codificator extends PairityBits {
             writer.write(finalBytes);
             writer.flush();
         }
-        
+
         writer.close();
     }
 
-    
 }

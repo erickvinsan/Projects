@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,13 +21,15 @@ public class Decodificator extends PairityBits {
     }
 
     public void makeDecodification() throws IOException {
-        this.fileWriter = new FileOutputStream("pacote.pck");
         int errSum;
         List<Byte> finalBytes = new ArrayList<>();
         List<Byte> bytes;
         byte[] dataBytes;
         List<Integer> colErrors, rowErrors;
         Byte rowParityCod, colParityCod, rowParityDecod, colParityDecod;
+
+        this.fileWriter = new FileOutputStream("pacote.pck");
+
         for (int i = 0; i < (originalBytes.size() / 10); i++) {
 
             bytes = readBlock(originalBytes, i);//Lê bloco de 10 bytes
@@ -61,20 +64,24 @@ public class Decodificator extends PairityBits {
                 default:// Mais de 1 erro econtrado.
                     System.out.println("Mais de 1 erro encontrado!");//TODO mostrar erros.
                     break;
-            }            
+            }
             copyListToArray(finalBytes, dataBytes);
         }
         this.fileWriter.write(getArrayDataBytes(finalBytes));
     }
-    
-    private List<Byte> copyListToArray(List<Byte> list, byte[] bytes){
+
+    private List<Byte> copyListToArray(List<Byte> list, byte[] bytes) {
+        //Arrays.asList(bytes); REFACTOR
+
         for (int i = 0; i < bytes.length; i++) {
             list.add(bytes[i]);
-        }        
+        }
         return list;
     }
 
     private byte[] getArrayDataBytes(List<Byte> listBytes) {
+        //return listBytes.toArray(); REFACTOR
+
         byte[] dataBytes = new byte[listBytes.size()];
         for (int i = 0; i < dataBytes.length; i++) {
             dataBytes[i] = listBytes.get(i);
@@ -82,17 +89,30 @@ public class Decodificator extends PairityBits {
         return dataBytes;
     }
 
-    private List<Byte> readFile() throws IOException {//Lê o arquivo e armazena os bytes lidos.
+    /**
+     * Lê o arquivo e armazena os bytes lidos.
+     *
+     * @return Bytes lidos.
+     * @throws IOException
+     */
+    private List<Byte> readFile() throws IOException {
+        //MakeArrayBytes ==  readFile? REFACTOR
         byte aux;
         List<Byte> bytes = new ArrayList<>();
-        aux = (byte) this.fileReader.read();
+        aux = (byte) super.fileReader.read();
         while (aux != -1) {
             bytes.add(aux);
-            aux = (byte) this.fileReader.read();
-        }//Estou assumindo que ele não grava o -1.
+            aux = (byte) super.fileReader.read();
+        }
         return bytes;
     }
 
+    /**
+     *
+     * @param originalBytes
+     * @param i
+     * @return
+     */
     private List<Byte> readBlock(List<Byte> originalBytes, int i) {//Retorna um bloco de 10 bytes.
         List<Byte> bytes = new ArrayList<>();
         int blockId = i * 10;
@@ -102,6 +122,14 @@ public class Decodificator extends PairityBits {
         return bytes;//1ª = byte coluna; 2ª = byte linha; [3,10] = bytes de conteúdo.
     }
 
+    /**
+     * Gera uma lista encabeçada pela quantidade de erros e depois as posições
+     * dos erros.
+     *
+     * @param bt1 Primeiro byte de paridade.
+     * @param bt2 Segundo byte de paridade.
+     * @return lista com erros e posições dos mesmos.
+     */
     private List<Integer> compareParityBytes(Byte bt1, Byte bt2) {//List[count, List[Posições]]
         int count = 0;
         List<Integer> errors = new ArrayList<>();
@@ -113,6 +141,6 @@ public class Decodificator extends PairityBits {
             }
         }
         errors.add(0, count);
-        return errors; //Retorna Lista emcabeçada pela quantidade de erros e depois as posições dos erros.
+        return errors;
     }
 }

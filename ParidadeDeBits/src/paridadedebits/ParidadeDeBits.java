@@ -23,7 +23,7 @@ public class ParidadeDeBits {
 
         Codificator c = new Codificator("pacote.pck");
         c.makeCodification();
-        
+
         try (FileInputStream fin = new FileInputStream("pacote.pck")) {//Mostrar Arquivo codificado com os bits de Paridade.
             //List<Byte> list = c.makeArrayBytes();
             byte aux = 0;
@@ -31,15 +31,15 @@ public class ParidadeDeBits {
             do {
                 aux = (byte) fin.read();
                 for (int i = 7; i >= 0; i--) {
-                    System.out.print((int)((aux >>> i) & 1));                    
+                    System.out.print((int) ((aux >>> i) & 1));
                 }
                 System.out.print(" ");
             } while (aux != -1);
         }
-        
+
         Decodificator d = new Decodificator("pacote.pck");
         d.makeDecodification();
-        
+
         try (FileInputStream fin = new FileInputStream("pacote.pck")) {//Mostra o Pacote decodificado.
             //List<Byte> list = c.makeArrayBytes();
             byte aux = 0;
@@ -47,7 +47,7 @@ public class ParidadeDeBits {
             do {
                 aux = (byte) fin.read();
                 for (int i = 7; i >= 0; i--) {
-                    System.out.print((int)((aux >>> i) & 1));                    
+                    System.out.print((int) ((aux >>> i) & 1));
                 }
                 System.out.print(" ");
             } while (aux != -1);
