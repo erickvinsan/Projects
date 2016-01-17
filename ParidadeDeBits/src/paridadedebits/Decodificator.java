@@ -79,7 +79,7 @@ public class Decodificator extends PairityBits {
                     break;
                 default:// Mais de 1 erro econtrado.
                     System.out.println("Mais de 1 erro encontrado!");//TODO mostrar erros.
-                    System.exit(-1); 
+                    System.exit(-1);
             }
             byte[] newByte = new byte[8 - qtdZeros];
             if (qtdZeros != 0 && (i == (blocosCompletos - 1))) {

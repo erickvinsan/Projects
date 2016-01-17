@@ -15,17 +15,17 @@ public class ParidadeDeBits {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         System.out.println("Iniciando Codificacao...");
         System.out.println("Lendo Arquivo...");
-        System.out.println("Entre com o nome do Arquivo de dados:");
+        System.out.println("Entre com o nome do arquivo de entrada:");
         Scanner leitor = new Scanner(System.in);
         String nome = leitor.nextLine();
         try (FileOutputStream f = new FileOutputStream(nome)) {
-            for (int i = 1; i <= 17; i++) {
-                f.write((byte) (i));
+            for (int i = 1; i <= 33; i++) {
+                f.write((byte) (i % 45));
             }
             f.flush();
         }
 
-        Codificator c = new Codificator(nome, 1, 2, 1);//
+        Codificator c = new Codificator(nome, 1, 2, 1);
         c.makeCodification();
 
         try (FileInputStream fin = new FileInputStream(nome)) {//Mostrar Arquivo codificado com os bits de Paridade.
@@ -46,8 +46,8 @@ public class ParidadeDeBits {
             } while (aux != -1);
         }
         System.out.println("\n-------------------------------------------------");
-        
-        System.out.println("Entre com o nome do Arquivo de dados:");
+
+        System.out.println("Entre com o nome do arquivo de saída:");
         String nomeSaida = leitor.nextLine();
         Decodificator d = new Decodificator(nome, nomeSaida);
         d.makeDecodification();
