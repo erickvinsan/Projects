@@ -16,18 +16,14 @@ public abstract class PairityBits {
 
     protected final InputStream fileReader;
     protected OutputStream fileWriter;
+    protected String nome;
 
     public PairityBits(String file) throws FileNotFoundException {
+        this.nome = file;
         this.fileReader = new FileInputStream(file);
     }
 
-    /**
-     * Pega os bytes do arquivo e trasnfere para uma lista de bytes.
-     *
-     * @return lista de bytes lida do arquivo.
-     * @throws IOException
-     */
-    protected List<Byte> makeArrayBytes() throws IOException {
+    protected List<Byte> makeArrayBytes() throws IOException {//Pega os bytes do arquivo e trsnfere para uma lista de bytes
         List<Byte> fileBytes = new ArrayList<>();
         int aux;
         do {
@@ -39,7 +35,6 @@ public abstract class PairityBits {
         return fileBytes;
     }
 
-    //Método inutilizado?
     private byte[] getBlockOfBytes(List<Byte> bytes, int i) {//Pega blocos de 8 bytes.
         byte[] bytesArray = new byte[8];
         int blockId = i * 8;
@@ -49,66 +44,48 @@ public abstract class PairityBits {
         return bytesArray;
     }
 
-    /**
-     * Faz a paridade por linha e retorna esse novo Byte. Caso o numero de bits
-     * "1" seja par, retorna "0", caso contrário, "1".
-     *
-     * @param bytes Bloco de bytes.
-     * @return Byte de paridade.
-     */
-    protected byte makeRowParity(byte[] bytes) {
+    protected byte makeRowParity(byte[] bytes) {//Faz a paridade por linha e retorna esse novo Byte.
         String rowByte = "";
         int rowCount = 0;
-        for (int i = 0; i < bytes.length; i++) {
+        for (int i = 0; i < bytes.length; i++) {//Percorre Cada byte do bloco
             byte aByte = bytes[i];
-            //Percorre cada bit de um byte do bloco.
-            for (int j = 7; j >= 0; j--) {
+            for (int j = 7; j >= 0; j--) {//Percorre cada bit de um byte do bloco
                 if (((int) (((byte) (aByte >>> j)) & 1)) == 1) {
                     rowCount++;
                 }
             }
-            //Verifica se o número de bits "1" é par.
-            if (rowCount % 2 == 0) {
+            if (rowCount % 2 == 0) {//verifica se o número de bits "1" é par ou não.
                 rowByte += "0";
             } else {
                 rowByte += "1";
             }
             rowCount = 0;
         }
-        //Converte a String final da paridade das linhas para Byte.
-        byte b = (byte) (Integer.parseInt(rowByte, 2));
+        //System.out.println(rowByte);
+        byte b = (byte) (Integer.parseInt(rowByte, 2));//Converte a String final da paridade das linhas para Byte
         return b;
     }
 
-    /**
-     * Faz a paridade por coluna e retorna esse novo Byte. Caso o numero de bits
-     * "1" seja par, retorna "0", caso contrário, "1".
-     *
-     * @param bytes Bloco de bytes.
-     * @return Byte de paridade.
-     */
-    protected byte makeColParity(byte[] bytes) {
+    protected byte makeColParity(byte[] bytes) {//Faz a paridade das colunas e retorna esse novo Byte.
         String colByte = "";
         int colCount = 0;
         byte aByte;
-        for (int i = 7; i >= 0; i--) {
-            //Percorre cada bit de um byte do bloco.
+        for (int i = 7; i >= 0; i--) {//Percorre Cada bit coluna de cada byte do bloco            
             for (int j = 7; j >= 0; j--) {
                 aByte = bytes[j];
                 if (((int) (((byte) (aByte >>> i)) & 1)) == 1) {
                     colCount++;
                 }
             }
-            //Verifica se o número de bits "1" é par.
-            if (colCount % 2 == 0) {
+            if (colCount % 2 == 0) {//verifica se o número de bits "1" é par ou não.
                 colByte += "0";
             } else {
                 colByte += "1";
             }
             colCount = 0;
         }
-        //Converte a String final da paridade das colunas para Byte.
-        byte b = (byte) (Integer.parseInt(colByte, 2));
+        //System.out.println(colByte);
+        byte b = (byte) (Integer.parseInt(colByte, 2));//Converte a String final da paridade das colunas para Byte
         return b;
     }
 }

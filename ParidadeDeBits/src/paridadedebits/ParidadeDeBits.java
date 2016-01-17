@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  *
@@ -14,49 +15,61 @@ public class ParidadeDeBits {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         System.out.println("Iniciando Codificacao...");
         System.out.println("Lendo Arquivo...");
-        try (FileOutputStream f = new FileOutputStream("pacote.pck")) {
-            for (int i = 1; i <= 16; i++) {
+        System.out.println("Entre com o nome do Arquivo de dados:");
+        Scanner leitor = new Scanner(System.in);
+        String nome = leitor.nextLine();
+        try (FileOutputStream f = new FileOutputStream(nome)) {
+            for (int i = 1; i <= 17; i++) {
                 f.write((byte) (i));
             }
             f.flush();
         }
 
-        Codificator c = new Codificator("pacote.pck");
+        Codificator c = new Codificator(nome, 1, 2, 1);//
         c.makeCodification();
 
-        try (FileInputStream fin = new FileInputStream("pacote.pck")) {//Mostrar Arquivo codificado com os bits de Paridade.
-            //List<Byte> list = c.makeArrayBytes();
-            byte aux = 0;
+        try (FileInputStream fin = new FileInputStream(nome)) {//Mostrar Arquivo codificado com os bits de Paridade.
+            byte aux;
+            int count = 0;
             System.out.println("\n" + "Quadro Codificado: ");
+            System.out.println("-------------------------------------------------");
             do {
                 aux = (byte) fin.read();
+                count++;
                 for (int i = 7; i >= 0; i--) {
                     System.out.print((int) ((aux >>> i) & 1));
                 }
                 System.out.print(" ");
+                if (count % 10 == 0) {
+                    System.out.println("");
+                }
             } while (aux != -1);
         }
-
-        Decodificator d = new Decodificator("pacote.pck");
+        System.out.println("\n-------------------------------------------------");
+        
+        System.out.println("Entre com o nome do Arquivo de dados:");
+        String nomeSaida = leitor.nextLine();
+        Decodificator d = new Decodificator(nome, nomeSaida);
         d.makeDecodification();
 
-        try (FileInputStream fin = new FileInputStream("pacote.pck")) {//Mostra o Pacote decodificado.
+        try (FileInputStream fin = new FileInputStream(nomeSaida)) {//Mostra o Pacote decodificado.
             //List<Byte> list = c.makeArrayBytes();
             byte aux = 0;
+            int count = 0;
             System.out.println("\n" + "Quadro Decodificado: ");
+            System.out.println("-------------------------------------------------");
             do {
                 aux = (byte) fin.read();
+                count++;
                 for (int i = 7; i >= 0; i--) {
                     System.out.print((int) ((aux >>> i) & 1));
                 }
                 System.out.print(" ");
+                if (count % 8 == 0) {
+                    System.out.println("");
+                }
             } while (aux != -1);
+            System.out.println("\n-------------------------------------------------");
         }
-//
-//        String s = "01000001";
-//        int i = Integer.parseInt(s, 2);
-//        System.out.println((char) i);
-//        byte b = (byte) (Integer.parseInt(s) & 0xFF);
-//        System.out.println(b);
     }
 }

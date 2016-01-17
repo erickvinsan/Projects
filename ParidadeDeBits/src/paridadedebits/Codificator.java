@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -13,18 +14,15 @@ import java.util.List;
 public class Codificator extends PairityBits {
 
     private OutputStream writer;
+    private final int arg, bt, bit;
 
-    public Codificator(String fileName) throws FileNotFoundException {
+    public Codificator(String fileName, int arg, int bt, int bit) throws FileNotFoundException {
         super(fileName);
+        this.arg = arg;
+        this.bt = bt;
+        this.bit = bit;
     }
 
-    /**
-     * Pega blocos de 8 bytes de uma lista.
-     *
-     * @param bytes Lista de bytes a ser filtrada.
-     * @param i
-     * @return Bloco de 8 bytes.
-     */
     private byte[] getBlockOfBytes(List<Byte> bytes, int i) {//Pega blocos de 8 bytes.
         byte[] bytesArray = new byte[8];
         int blockId = i * 8;
@@ -34,18 +32,10 @@ public class Codificator extends PairityBits {
         return bytesArray;
     }
 
-    private byte[] fillWithZero() {
-        return null;
-    }
-
-    /**
-     *
-     * @throws IOException
-     */
     public void makeCodification() throws IOException {
         List<Byte> listOfBytes = makeArrayBytes();
         System.out.println("Quantidade de bytes: " + (listOfBytes.size()));
-        writer = new FileOutputStream("pacote.pck");
+        writer = new FileOutputStream(this.nome);
         byte[] bytes;
         System.out.println("");
         Byte row;
@@ -54,9 +44,8 @@ public class Codificator extends PairityBits {
         System.out.println("Grupos de 8 bytes: " + mult + "\n");
         byte[] finalBytes = new byte[10];
         byte auxConst = 0;
-
-        if ((listOfBytes.size() % 8) != 0) {//Número de bytes != múltiplo de 8. Preenche com 0's.
-            int rest = listOfBytes.size() - (mult * 8);
+        int rest = listOfBytes.size() - (mult * 8);
+        if ((listOfBytes.size() % 8) != 0) {//Número de bytes != múltiplo de 8. Preenche com 0's.            
             System.out.println("Resto = " + rest + "\n");
             for (int i = 0; i < (8 - rest); i++) {//Preenche com 0's
                 listOfBytes.add(auxConst);
@@ -76,11 +65,41 @@ public class Codificator extends PairityBits {
             finalBytes[0] = col;
             finalBytes[1] = row;
             System.arraycopy(bytes, 0, finalBytes, 2, 8);
-            writer.write(finalBytes);
+            if (arg == 1) {
+                makeCorruption(finalBytes, this.bt, this.bit);//Possibilidade ou não de criar um bit corrompido.
+            }
+
+            if (rest != 0 && (i == (mult - 1))) {
+                byte[] finalBytesWithoutFill = new byte[2 + rest];
+                System.arraycopy(finalBytes, 0, finalBytesWithoutFill, 0, (2 + rest));
+                writer.write(finalBytesWithoutFill);
+            } else {
+                writer.write(finalBytes);
+            }
             writer.flush();
         }
 
         writer.close();
+    }
+
+    private void makeCorruption(byte[] finalBytes, int bt, int bitError) {
+        Random r = new Random();
+        if (r.nextInt(100) > 50) {
+            String finalByte = "";
+            byte aux = finalBytes[bt];
+            for (int i = 7; i >= 0; i--) {
+                if (i == bitError) {
+                    if ((((int) aux >>> i) & 1) == 0) {
+                        finalByte += 1;
+                    } else {
+                        finalByte += 0;
+                    }
+                } else {
+                    finalByte += (int) ((aux >>> i) & 1);
+                }
+            }
+            finalBytes[bt] = (byte) (Integer.parseInt(finalByte, 2));
+        }
     }
 
 }
