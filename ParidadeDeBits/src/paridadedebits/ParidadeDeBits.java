@@ -16,6 +16,7 @@ public class ParidadeDeBits {
         System.out.println("Entre com o nome do arquivo de entrada:");
         Scanner leitor = new Scanner(System.in);
         String nome = leitor.nextLine();
+//      Cria um arquivo para teste.
 //        try (FileOutputStream f = new FileOutputStream(nome)) {
 //            for (int i = 1; i <= 33; i++) {
 //                f.write((byte) (i % 45));
