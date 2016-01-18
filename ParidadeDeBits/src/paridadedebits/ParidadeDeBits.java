@@ -13,19 +13,17 @@ import java.util.Scanner;
 public class ParidadeDeBits {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        System.out.println("Iniciando Codificacao...");
-        System.out.println("Lendo Arquivo...");
         System.out.println("Entre com o nome do arquivo de entrada:");
         Scanner leitor = new Scanner(System.in);
         String nome = leitor.nextLine();
-        try (FileOutputStream f = new FileOutputStream(nome)) {
-            for (int i = 1; i <= 33; i++) {
-                f.write((byte) (i % 45));
-            }
-            f.flush();
-        }
+//        try (FileOutputStream f = new FileOutputStream(nome)) {
+//            for (int i = 1; i <= 33; i++) {
+//                f.write((byte) (i % 45));
+//            }
+//            f.flush();
+//        }
 
-        Codificator c = new Codificator(nome, 1, 2, 1);
+        Codificator c = new Codificator(nome, 0, 2, 1);//Primeiro int seta bit de erro no byte 2, no bit 1.
         c.makeCodification();
 
         try (FileInputStream fin = new FileInputStream(nome)) {//Mostrar Arquivo codificado com os bits de Paridade.
