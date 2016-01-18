@@ -1,5 +1,7 @@
 Requisitos:
-    - Java
+    - Java.
+    - NetBeans 8.1.
+    - SDK 8u65 (Última Versão).
 
 Instruções de execução:
     - Na linha de comando executar:
