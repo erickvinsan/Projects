@@ -72,9 +72,9 @@ public class Controlador {
 
         List<Short> textoCifrado = readShortsInFile(this.outFile);
         
-        if (textoCifrado.size() % 2 != 0){
-            throw new Exceptions.InvalidFileException("Arquivo corrompido - Número ímpar de Bytes.");
-        }
+        //if (textoCifrado.size() % 2 != 0){
+        //    throw new Exceptions.InvalidFileException("Arquivo corrompido - Número ímpar de Bytes.");
+        //}
         
         System.out.println("\nQuantidade de Shorts do Arquivo Cifrado: " + textoCifrado.size());
         System.out.println("\nShorts Texto Cifrado: ");
@@ -153,6 +153,9 @@ public class Controlador {
             }
         } catch (EOFException e) {
             System.out.println("- FIM DE ARQUIVO -");
+        } catch (NumberFormatException n){
+            System.err.print("Arquivo inválido - Número ímpar de bytes.");
+            System.exit(1);
         }
         return shorts;
     }
