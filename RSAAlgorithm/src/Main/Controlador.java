@@ -1,5 +1,7 @@
 package Main;
 
+import Exceptions.InvalidFileException;
+import Exceptions.InvalidMessageException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Scanner;
@@ -34,6 +36,8 @@ public class Controlador {
         this.decifrador = new Decifrador(n, d);
     }
 
+    
+    //Módulo que cifra o arquivo.
     public void cifrarArquivo() throws IOException {
         System.out.println("\n---------------------------------------------------------------------------");
         System.out.println("Inicio codificacao...");
@@ -59,13 +63,19 @@ public class Controlador {
         out.close();
     }
 
-    public void decifrarArquivo() throws IOException {
+    //Módulo que decifra o arquivo.
+    public void decifrarArquivo() throws IOException, InvalidMessageException, InvalidFileException {
         System.out.println("\n---------------------------------------------------------------------------");
         System.out.println("Iniciando Decodificao...");
         this.in = new DataInputStream(new BufferedInputStream(new FileInputStream(this.outFile)));
         this.out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("saidaDecifrada.decif")));
 
         List<Short> textoCifrado = readShortsInFile(this.outFile);
+        
+        if (textoCifrado.size() % 2 != 0){
+            throw new Exceptions.InvalidFileException("Arquivo corrompido - Número ímpar de Bytes.");
+        }
+        
         System.out.println("\nQuantidade de Shorts do Arquivo Cifrado: " + textoCifrado.size());
         System.out.println("\nShorts Texto Cifrado: ");
         for (int i = 0; i < textoCifrado.size(); i++) {
@@ -77,6 +87,11 @@ public class Controlador {
         for (int i = 0; i < textoCifrado.size(); i++) {
             aux = (byte) (decifrador.binExp(textoCifrado.get(i), decifrador.getN(), decifrador.getD()));
             System.out.print((byte) aux + " ");
+            
+            //Se decifragem maior que 255 aborta programa.
+            if(aux > 255){
+                throw new Exceptions.InvalidMessageException("Erro na decifragem do arquivo - Valor maior que 255.");
+            }
             textoDecodificado[i] = aux;
             this.out.writeByte(textoDecodificado[i]);
         }
