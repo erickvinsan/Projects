@@ -1,0 +1,17 @@
+Trabalho 2 - Redes de Computadores II
+Integrantes do Grupo = Erick Valadares, Marcello Cunha, Vinicius Santos de Souza.
+
+Execução do programa.
+
+1 - Irá perguntar se deseja entrar no modo debug ou não (só facilita na hora de verificar se a cifragem está correta pois os parâmetros
+são passados por hard-code.)
+
+2 - Se acessar no modo debug (opção 1), o programa irá pedir uma mensagem qualquer para ser salvano arquivo debug.cif para ser computada.
+
+3 - Se não entrar no modo debug (opção 0):
+    Entrar com o nome do arquivo para cifrar;
+    Entrar com o nome do arquivo que receberá a decifragem do arquivo cifrado;
+    Irá perguntar se deseja preencher o arquivo ou usar o arquivo já preenchido por você.
+        Digite 1 para preencher o arquivo;
+        Digite 2 para usar um arquivo já preenchido.
+    
